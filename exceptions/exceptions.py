@@ -61,3 +61,52 @@ class DocumentBuildError(Exception):
     """
     def __init__(self, message: str):
         super().__init__(message)
+
+
+class EmbeddingModelError(Exception):
+    """
+    Raised when the embedding model cannot be loaded or initialised.
+
+    This covers HuggingFace download failures, CUDA OOM during model load,
+    corrupted weight files, and any other unrecoverable model-level error.
+    Callers should treat this as fatal — the pipeline cannot continue
+    without a functioning embedding model.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class EmbeddingGenerationError(Exception):
+    """
+    Raised when the model is loaded successfully but fails to produce
+    an embedding for a specific document or batch.
+
+    Examples: NaN outputs from the model, shape mismatches, runtime
+    errors during ``model.encode()``.  Unlike ``EmbeddingModelError``,
+    this error may be recoverable by retrying with a smaller batch or
+    a different document.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class EmbeddingValidationError(Exception):
+    """
+    Raised when an embedding vector fails post-generation validation.
+
+    Validation checks include: empty vector, wrong dimension, presence of
+    NaN or Inf values, and zero-norm vectors (which would cause division-
+    by-zero during cosine similarity computation).
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class CacheError(Exception):
+    """
+    Raised when the embedding cache encounters an unrecoverable internal
+    error (e.g. a corrupted cache entry, hash collision, or serialisation
+    failure).  Normal cache misses are NOT errors and must never raise this.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
