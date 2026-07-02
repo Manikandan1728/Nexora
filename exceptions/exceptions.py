@@ -110,3 +110,52 @@ class CacheError(Exception):
     """
     def __init__(self, message: str):
         super().__init__(message)
+
+
+class VectorStoreError(Exception):
+    """
+    Raised when the vector store encounters an unrecoverable error.
+
+    Covers initialisation failures, client connection errors, and any
+    ChromaDB-level exception that cannot be handled gracefully.  Callers
+    should treat this as fatal for the current pipeline run.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class CollectionError(Exception):
+    """
+    Raised when a ChromaDB collection cannot be created, opened, or
+    validated.
+
+    Examples: collection name conflict, schema version mismatch between
+    an existing collection and the current config, or an attempt to
+    access a collection that does not exist.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class PersistenceError(Exception):
+    """
+    Raised when the persistence layer encounters a storage-level error.
+
+    Examples: the persist directory is not writable, the disk is full,
+    or the ChromaDB on-disk files are corrupted.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class StorageValidationError(Exception):
+    """
+    Raised when input documents fail pre-storage validation.
+
+    Examples: duplicate document IDs within a single batch, an
+    EmbeddedDocument with an empty embedding, or a metadata value
+    that cannot be serialised to the ChromaDB metadata format
+    (only str, int, float, bool are supported).
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
