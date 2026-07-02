@@ -159,3 +159,58 @@ class StorageValidationError(Exception):
     """
     def __init__(self, message: str):
         super().__init__(message)
+
+
+class RetrievalError(Exception):
+    """
+    Raised when the retrieval pipeline encounters an unrecoverable error
+    that does not fit a more specific category — for example, when the
+    ChromaDB collection does not exist at query time.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class QueryValidationError(Exception):
+    """
+    Raised when the user-supplied query string fails validation.
+
+    Examples: empty query, query containing only whitespace, query that
+    is longer than the model's maximum sequence length.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class QueryEmbeddingError(Exception):
+    """
+    Raised when the query text cannot be converted into an embedding vector.
+
+    Wraps ``EmbeddingGenerationError`` or ``EmbeddingModelError`` in a
+    retrieval-specific exception so callers of the retrieval pipeline
+    do not need to import from the vectorization layer.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class SimilaritySearchError(Exception):
+    """
+    Raised when the ChromaDB similarity search fails at the database level.
+
+    Examples: collection not found, index corruption, ChromaDB internal
+    error during ``collection.query()``.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class MetadataFilterError(Exception):
+    """
+    Raised when a user-supplied metadata filter dict is invalid.
+
+    Examples: unsupported field name, wrong value type for a known field,
+    malformed filter structure.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
