@@ -214,3 +214,67 @@ class MetadataFilterError(Exception):
     """
     def __init__(self, message: str):
         super().__init__(message)
+
+
+# ---------------------------------------------------------------------------
+# Phase 6 — Grounded Answer Generation exceptions
+# ---------------------------------------------------------------------------
+
+class LLMProviderError(Exception):
+    """
+    Raised when an LLM provider cannot be initialised, reaches its
+    endpoint, or returns an unrecoverable error response.
+
+    Covers: missing API key, unreachable Ollama server, HTTP 5xx from
+    OpenAI, model not found, and any other provider-level failure.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class PromptBuildError(Exception):
+    """
+    Raised when the prompt builder fails to assemble a valid prompt.
+
+    Examples: context string too long after truncation, missing required
+    sections, or invalid template parameters.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class ContextBuildError(Exception):
+    """
+    Raised when the context builder cannot produce a usable context string
+    from the supplied retrieved documents.
+
+    Examples: all documents are empty, token budget is too small to fit
+    even one document, or an unsupported metadata structure is encountered.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class AnswerGenerationError(Exception):
+    """
+    Raised when the answer generator fails to obtain a completion from the
+    LLM provider after all retries are exhausted.
+
+    Examples: LLM returns an empty response, response fails content
+    safety filters, timeout exceeded, unexpected response schema.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class CitationError(Exception):
+    """
+    Raised when the citation builder encounters an unrecoverable error
+    constructing citations from retrieved documents.
+
+    This is always a programming error — the citation builder should
+    degrade gracefully on bad metadata rather than raise for every field.
+    It raises only when the input type contract is violated.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
