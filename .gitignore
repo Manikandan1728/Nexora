@@ -1,8 +1,96 @@
+# ===============================
+# WhatsApp datasets
+# ===============================
+*.zip
+
+# ===============================
+# Extracted datasets
+# ===============================
+data/extracted/
+
+# ===============================
+# ChromaDB storage
+# ===============================
+data/vectors/
+
+# ===============================
+# Temporary processed data
+# ===============================
+data/raw/*
+!data/raw/.keep
+data/processed/*
+!data/processed/.keep
+data/storage/*
+!data/storage/.keep
+
+# ===============================
+# Logs
+# ===============================
+*.log
+data/logs/*
+!data/logs/.keep
+
+# ===============================
+# Python cache
+# ===============================
 __pycache__/
+.pytest_cache/
 *.pyc
 *.pyo
 *.pyd
+*.pycache
+
+# ===============================
+# Environment and secrets
+# ===============================
+.env
+*.env
+.env.*
+!.env.example
+
+# ===============================
+# Virtual environments
+# ===============================
+.venv/
+venv/
+env/
+ENV/
+
+# ===============================
+# Distribution / packaging
+# ===============================
+dist/
+build/
+*.egg-info/
+*.egg
+site/
+
+# ===============================
+# Database files
+# ===============================
 *.db
 *.sqlite3
-*.log
-.env
+
+# ===============================
+# Editor / IDE artefacts
+# ===============================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ===============================
+# mypy / type checker caches
+# ===============================
+.mypy_cache/
+.dmypy.json
+
+# ===============================
+# Coverage reports
+# ===============================
+.coverage
+htmlcov/
+coverage.xml
