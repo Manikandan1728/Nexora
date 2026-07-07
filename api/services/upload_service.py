@@ -151,7 +151,7 @@ def run_upload_pipeline(
 
     # ── 4. Generate collection name ───────────────────────────────────
     collection_name = _generate_collection_name(safe_stem)
-    persist_dir = str(settings.vectors_root / collection_name)
+    persist_dir = str(settings.vectors_root)  # shared root — all collections live here
 
     # ── 5. Phase 1 — Ingestion ────────────────────────────────────────
     try:
