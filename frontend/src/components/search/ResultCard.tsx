@@ -53,7 +53,7 @@ export function ResultCard({ doc }: Props) {
   };
 
   const score = doc.similarity_score;
-  const isLowConfidence = score < 0.4;
+  const isLowConfidence = doc.is_low_confidence ?? (score < 0.4);
 
   const knownCompactKeys = [
     "chunk_index",
@@ -154,7 +154,9 @@ export function ResultCard({ doc }: Props) {
         {expanded ? (
           <div>{formatTextWithLinks(doc.text)}</div>
         ) : (
-          <p className="line-clamp-4">{doc.text}</p>
+          <div className="line-clamp-4 whitespace-pre-wrap">
+            {doc.focused_snippet ? formatTextWithLinks(doc.focused_snippet) : doc.text}
+          </div>
         )}
       </div>
 

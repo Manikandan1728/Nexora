@@ -8,7 +8,7 @@ import { ErrorState } from "@/components/common/ErrorState";
 import { SearchForm } from "./SearchForm";
 import { AnswerPanel } from "./AnswerPanel";
 import { CitationList } from "./CitationList";
-import { Search, Upload, SearchX } from "lucide-react";
+import { Search, MessageSquare, SearchX } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { ApiError } from "@/types/api";
 
@@ -36,15 +36,15 @@ export default function SearchPage() {
       {/* No collections */}
       {!collectionsQuery.isLoading && collections.length === 0 && (
         <EmptyState
-          icon={<Upload className="h-6 w-6" />}
+          icon={<MessageSquare className="h-6 w-6" />}
           title="No collections yet"
-          description="Upload a WhatsApp chat ZIP to create your first knowledge base."
+          description="Connect Telegram and enable indexing to start building your knowledge base."
           action={
             <Link
-              to="/upload"
+              to="/telegram"
               className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground hover:opacity-90 transition-opacity"
             >
-              Go to Upload
+              Connect Telegram
             </Link>
           }
         />
@@ -85,10 +85,10 @@ export default function SearchPage() {
 
       {search.isSuccess && search.data && !search.isPending && (
         <div className="space-y-6">
-          {search.data.retrieved_documents?.length === 0 ? (
+          {search.data.retrieved_documents?.length === 0 || search.data.no_strong_match ? (
             <EmptyState
               icon={<SearchX className="h-6 w-6" />}
-              title="No relevant conversations found."
+              title={search.data.no_strong_match ? "No strong match found." : "No relevant conversations found."}
               description="Try adjusting your search terms or expanding your query."
             />
           ) : (

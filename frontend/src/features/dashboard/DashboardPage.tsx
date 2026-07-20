@@ -72,7 +72,7 @@ export default function DashboardPage() {
     <div className="space-y-8 animate-fade-in">
       <PageHeader
         title="Dashboard"
-        description="Welcome to Nexora — your AI-powered personal knowledge engine."
+        description="Welcome to Nexora — your Telegram AI Knowledge Retrieval Platform."
       />
 
       {/* Metrics */}
@@ -154,10 +154,10 @@ export default function DashboardPage() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <QuickActionCard
-            to="/upload"
+            to="/telegram"
             icon={<Brain className="h-5 w-5" />}
-            label="Upload Knowledge"
-            description="Import a WhatsApp chat ZIP to build a collection"
+            label="Connect Telegram"
+            description="Authenticate and start indexing your Telegram conversations"
           />
           <QuickActionCard
             to="/search"

@@ -1,0 +1,15 @@
+{
+  "account_id": "tg_account_001",
+  "chat_id": "tg_chat_anu_001",
+  "sender_id": "tg_user_anu_001",
+  "sender_name": "Anu",
+  "message_id": "tg_message_1001",
+  "message_type": "text",
+  "text": "The project report must be submitted before Monday at 11:59 PM.",
+  "timestamp": "2026-07-13T18:30:00+05:30",
+  "edited_at": "2026-07-13T19:00:00+05:30",
+  "reply_to_message_id": null,
+  "forwarded_from": null,
+  "is_edited": true,
+  "is_deleted": false
+}

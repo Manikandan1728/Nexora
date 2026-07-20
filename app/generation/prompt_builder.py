@@ -5,7 +5,7 @@ WHY PROMPTS REQUIRE RETRIEVED CONTEXT
 --------------------------------------
 Language models trained on internet text will answer questions from their
 parametric memory — knowledge baked in during training. For a personal
-knowledge base over private WhatsApp conversations, that parametric
+knowledge base over private Telegram conversations, that parametric
 knowledge is useless and actively harmful: the model would invent plausible-
 sounding answers based on patterns in its training data, not on the user's
 actual conversation history.

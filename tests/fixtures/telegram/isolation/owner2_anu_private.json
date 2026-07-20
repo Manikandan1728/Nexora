@@ -1,0 +1,13 @@
+{
+  "_owner": "owner_002",
+  "_chat": "private_anu_owner2",
+  "_fact": "A DIFFERENT Anu (distinct sender_id, different owner) mentioned the cloud budget.",
+  "account_id": "tg_account_owner2",
+  "chat_id": "tg_private_anu_owner2",
+  "sender_id": "tg_user_anu_owner2",
+  "sender_name": "Anu",
+  "message_id": "iso_msg_004",
+  "message_type": "text",
+  "text": "The cloud infrastructure budget was approved for Q3.",
+  "timestamp": "2026-07-14T13:00:00+05:30"
+}

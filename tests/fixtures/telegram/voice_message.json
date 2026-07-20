@@ -1,0 +1,21 @@
+{
+  "account_id": "tg_account_001",
+  "chat_id": "tg_chat_anu_001",
+  "sender_id": "tg_user_anu_001",
+  "sender_name": "Anu",
+  "message_id": "tg_message_1004",
+  "message_type": "voice",
+  "text": null,
+  "timestamp": "2026-07-13T18:35:00+05:30",
+  "attachment": {
+    "file_id": "tg_file_voice_001",
+    "filename": "voice_message.ogg",
+    "mime_type": "audio/ogg",
+    "file_size": 65536,
+    "duration_seconds": 12
+  },
+  "reply_to_message_id": null,
+  "forwarded_from": null,
+  "is_edited": false,
+  "is_deleted": false
+}

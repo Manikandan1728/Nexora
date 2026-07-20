@@ -64,6 +64,26 @@ body {
   overflow-x: hidden;
 }
 
+/* ─────────────────────────────────────────────
+   Appearance Preferences
+   ─────────────────────────────────────────── */
+html[data-font-size="sm"] { font-size: 14px; }
+html[data-font-size="md"] { font-size: 16px; }
+html[data-font-size="lg"] { font-size: 18px; }
+
+html[data-density="compact"] {
+  --spacing-scale: 0.85;
+}
+
+html[data-reduced-motion="true"] *,
+html[data-reduced-motion="true"] *::before,
+html[data-reduced-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
 #root {
   min-height: 100dvh;
   display: flex;

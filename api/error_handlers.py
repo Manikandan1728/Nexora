@@ -24,11 +24,19 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from api.exceptions import (
     CollectionDeleteError,
     CollectionNotFoundError,
+    ConversationNotFoundError,
+    ConversationNotOwnedError,
     FileTooLargeError,
     InvalidInputError,
+    InvalidSenderFilterError,
+    InvalidTimestampFilterError,
     LLMUnavailableError,
+    MissingMandatoryMetadataError,
     NexoraAPIError,
     ProcessingError,
+    UnauthorizedOwnerScopeError,
+    UnsupportedFilterCombinationError,
+    VectorFilterBuildError,
 )
 from api.schemas.response_models import ErrorResponse
 
@@ -37,8 +45,12 @@ logger = logging.getLogger(__name__)
 
 def _error_json(status: int, code: str, message: str, detail: str | None = None) -> JSONResponse:
     """Build a ``JSONResponse`` from ``ErrorResponse`` fields."""
-    body = ErrorResponse(error=code, message=message, detail=detail)
-    return JSONResponse(status_code=status, content=body.model_dump())
+    from asgi_correlation_id.context import correlation_id
+
+    # Optional dynamic injection, as we didn't change the ErrorResponse pydantic model schema to avoid breaking contracts
+    content = ErrorResponse(error=code, message=message, detail=detail).model_dump()
+    content["correlation_id"] = correlation_id.get() or "N/A"
+    return JSONResponse(status_code=status, content=content)
 
 
 # ---------------------------------------------------------------------------
@@ -189,6 +201,15 @@ def register_handlers(app) -> None:
     app.add_exception_handler(ProcessingError, processing_error_handler)
     app.add_exception_handler(CollectionDeleteError, collection_delete_error_handler)
     app.add_exception_handler(LLMUnavailableError, llm_unavailable_handler)
+    # Telegram / metadata-retrieval exceptions [ADDITIVE]
+    app.add_exception_handler(UnauthorizedOwnerScopeError,    lambda req, exc: _error_json(403, "unauthorized_owner", "Unauthorized owner scope."))
+    app.add_exception_handler(ConversationNotFoundError,      lambda req, exc: _error_json(404, "conversation_not_found", str(exc.message)))
+    app.add_exception_handler(ConversationNotOwnedError,      lambda req, exc: _error_json(403, "conversation_not_owned", "Conversation is not owned by the authenticated user."))
+    app.add_exception_handler(InvalidSenderFilterError,       lambda req, exc: _error_json(400, "invalid_sender_filter", str(exc.message)))
+    app.add_exception_handler(UnsupportedFilterCombinationError, lambda req, exc: _error_json(400, "unsupported_filter_combination", str(exc.message)))
+    app.add_exception_handler(InvalidTimestampFilterError,    lambda req, exc: _error_json(400, "invalid_timestamp_filter", str(exc.message)))
+    app.add_exception_handler(VectorFilterBuildError,         lambda req, exc: _error_json(500, "filter_build_error", "An error occurred while building the search filter."))
+    app.add_exception_handler(MissingMandatoryMetadataError,  lambda req, exc: _error_json(500, "missing_metadata", "Missing mandatory metadata during ingestion."))
     app.add_exception_handler(NexoraAPIError, generic_nexora_error_handler)
     app.add_exception_handler(StarletteHTTPException, http_exception_handler)
     app.add_exception_handler(Exception, unhandled_exception_handler)

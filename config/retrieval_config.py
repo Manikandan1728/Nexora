@@ -41,7 +41,7 @@ _DEFAULT_PERSIST_DIR: str = str(
 )
 _DEFAULT_EMBEDDING_MODEL: str = "BAAI/bge-m3"
 _DEFAULT_TOP_K: int = 5
-_DEFAULT_SCORE_THRESHOLD: float = 0.0
+_DEFAULT_SCORE_THRESHOLD: float = 0.40
 _DEFAULT_DISTANCE_METRIC: str = "cosine"
 
 _VALID_DISTANCE_METRICS: frozenset = frozenset({"cosine", "l2", "ip"})

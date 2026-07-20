@@ -1,0 +1,20 @@
+{
+  "account_id": "tg_account_001",
+  "chat_id": "tg_chat_arun_001",
+  "sender_id": "tg_user_arun_001",
+  "sender_name": "Arun",
+  "message_id": "tg_message_2001",
+  "message_type": "photo",
+  "text": "The whiteboard diagram from today's meeting.",
+  "timestamp": "2026-07-13T15:00:00+05:30",
+  "attachment": {
+    "file_id": "tg_file_photo_001",
+    "filename": "photo_2026_07_13.jpg",
+    "mime_type": "image/jpeg",
+    "file_size": 512000
+  },
+  "reply_to_message_id": null,
+  "forwarded_from": null,
+  "is_edited": false,
+  "is_deleted": false
+}

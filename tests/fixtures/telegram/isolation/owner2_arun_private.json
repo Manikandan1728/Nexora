@@ -1,0 +1,13 @@
+{
+  "_owner": "owner_002",
+  "_chat": "private_arun_owner2",
+  "_fact": "Owner_002's Arun (distinct sender_id) mentioned the security audit.",
+  "account_id": "tg_account_owner2",
+  "chat_id": "tg_private_arun_owner2",
+  "sender_id": "tg_user_arun_owner2",
+  "sender_name": "Arun",
+  "message_id": "iso_msg_005",
+  "message_type": "text",
+  "text": "The security audit report will be ready by end of month.",
+  "timestamp": "2026-07-14T14:00:00+05:30"
+}

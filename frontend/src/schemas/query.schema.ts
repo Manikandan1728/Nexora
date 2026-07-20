@@ -16,6 +16,31 @@ export const RetrievedDocumentSchema = z.object({
   similarity_score: z.number(),
   rank: z.number().int(),
   metadata: z.record(z.unknown()).optional(),
+  focused_snippet: z.string().nullish(),
+  matched_messages: z
+    .array(z.object({ text: z.string(), index: z.number().int() }))
+    .nullish(),
+  matched_terms: z.array(z.string()).nullish(),
+  relevance_reason: z.string().nullish(),
+  is_low_confidence: z.boolean().optional(),
+  no_strong_passage: z.boolean().nullish(),
+});
+
+export const TelegramSourceSchema = z.object({
+  document_id: z.string(),
+  source: z.string(),
+  conversation_id: z.string(),
+  conversation_title: z.string(),
+  conversation_type: z.string(),
+  sender_id: z.string(),
+  sender_name: z.string(),
+  message_id: z.string(),
+  timestamp: z.string(),
+  content_type: z.string(),
+  filename: z.string(),
+  chunk_index: z.number().int(),
+  snippet: z.string(),
+  score: z.number(),
 });
 
 export const QueryResponseSchema = z.object({
@@ -23,9 +48,11 @@ export const QueryResponseSchema = z.object({
   answer: z.string().nullish(),
   citations: z.array(CitationSchema).optional(),
   retrieved_documents: z.array(RetrievedDocumentSchema).optional(),
+  sources: z.array(TelegramSourceSchema).optional(),
   confidence: z.number().nullish(),
   llm_used: z.boolean().optional(),
   message: z.string().nullish(),
+  no_strong_match: z.boolean().optional(),
   elapsed_seconds: z.number(),
 });
 

@@ -55,6 +55,7 @@ from chromadb import Collection
 
 from models.retrieved_document import RetrievedDocument
 from config.retrieval_config import RetrievalConfig
+from config.snippet_config import LOW_CONFIDENCE_THRESHOLD
 from app.storage.vector_store.persistence import StoragePersistence
 from app.storage.vector_store.collection_manager import CollectionManager
 from config.vector_config import VectorStoreConfig
@@ -269,10 +270,23 @@ class SimilaritySearch:
             # Convert distance to similarity score
             similarity = self._distance_to_similarity(float(distance))
 
-            # Apply score threshold
+            # Determine if this result is low confidence.
+            # Uses LOW_CONFIDENCE_THRESHOLD (0.40) from config/snippet_config.py —
+            # single source of truth.  Boundary: similarity == 0.40 → NOT low-confidence
+            # (strictly less than).
+            is_low_confidence = similarity < LOW_CONFIDENCE_THRESHOLD
+            if is_low_confidence:
+                logger.debug(
+                    "Flagging result id=%r as low confidence (score=%.4f < threshold=%.4f)",
+                    doc_id,
+                    similarity,
+                    LOW_CONFIDENCE_THRESHOLD,
+                )
+
+            # Apply hard filtering based on the configured score threshold.
             if similarity < self._config.score_threshold:
                 logger.debug(
-                    "Dropping result id=%r  score=%.4f < threshold=%.4f",
+                    "Dropping result id=%r (score=%.4f < config threshold=%.4f)",
                     doc_id,
                     similarity,
                     self._config.score_threshold,
@@ -295,6 +309,7 @@ class SimilaritySearch:
                     rank=rank,
                     source_collection=self._config.collection_name,
                     query=query_text,
+                    is_low_confidence=is_low_confidence,
                 )
             )
             rank += 1

@@ -1,28 +1,5 @@
 class InvalidInputError(Exception):
-    """
-    Raised when the input path is invalid.
-    """
-    def __init__(self, message: str):
-        super().__init__(message)
-
-class ZipValidationError(Exception):
-    """
-    Raised when ZIP validation fails.
-    """
-    def __init__(self, message: str):
-        super().__init__(message)
-
-class ExtractionError(Exception):
-    """
-    Raised when extraction of ZIP files fails.
-    """
-    def __init__(self, message: str):
-        super().__init__(message)
-
-class DatasetValidationError(Exception):
-    """
-    Raised when dataset validation fails.
-    """
+    """Raised when the input is invalid."""
     def __init__(self, message: str):
         super().__init__(message)
 
@@ -275,6 +252,91 @@ class CitationError(Exception):
     This is always a programming error — the citation builder should
     degrade gracefully on bad metadata rather than raise for every field.
     It raises only when the input type contract is violated.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+# ---------------------------------------------------------------------------
+# Telegram metadata / retrieval isolation exceptions (Task 19, Req 18)
+# ---------------------------------------------------------------------------
+
+class UnauthorizedOwnerScope(Exception):
+    """
+    Raised when a client-supplied owner_id differs from the authenticated
+    owner, or when an operation is attempted on data the caller does not own.
+    HTTP surface: 403.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class ConversationNotFound(Exception):
+    """
+    Raised when a requested conversation_id does not exist in the system.
+    HTTP surface: 404.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class ConversationNotOwned(Exception):
+    """
+    Raised when a requested conversation_id exists but does not belong
+    to the authenticated owner.
+    HTTP surface: 403.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class InvalidSenderFilter(Exception):
+    """
+    Raised when a sender_id filter is invalid for the selected conversation
+    (e.g. sender is not a participant in that conversation).
+    HTTP surface: 400.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class UnsupportedFilterCombination(Exception):
+    """
+    Raised when a combination of filter fields is mutually exclusive or
+    otherwise not supported (e.g. both conversation_id and conversation_ids
+    supplied simultaneously).
+    HTTP surface: 400.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class InvalidTimestampFilter(Exception):
+    """
+    Raised when a timestamp_from or timestamp_to filter value cannot be
+    parsed as a valid ISO-8601 datetime.
+    HTTP surface: 400.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class VectorFilterBuildError(Exception):
+    """
+    Raised when the ChromaWhereBuilder fails to construct a valid
+    ChromaDB where-clause from the validated filter.  Internal error —
+    detail is logged only, never returned to the client.
+    HTTP surface: 500 with generic message.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class MissingMandatoryMetadataError(Exception):
+    """
+    Raised during ingestion when a KnowledgeObject is missing mandatory
+    metadata fields (owner_id, source) required before vector storage.
+    HTTP surface: 500 (ingestion-side), detail logged with IDs only.
     """
     def __init__(self, message: str):
         super().__init__(message)

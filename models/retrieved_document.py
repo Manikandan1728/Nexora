@@ -37,6 +37,7 @@ to use whichever representation is more natural for their use case.
 
 from __future__ import annotations
 
+from typing import Any, Dict, List, Optional
 from dataclasses import dataclass
 
 
@@ -90,6 +91,31 @@ class RetrievedDocument:
     source_collection: str
     query: str
 
+    # Phase 5B — query-focused snippet fields (all optional, backward-compatible)
+    focused_snippet: Optional[str] = None
+    matched_messages: Optional[List[Dict[str, Any]]] = None
+    matched_terms: Optional[List[str]] = None
+    relevance_reason: Optional[str] = None
+    is_low_confidence: bool = False
+    no_strong_passage: Optional[bool] = None
+
+    # Telegram / source-identity fields (all optional — Req 11)
+    # Populated from VectorMetadata when the chunk was ingested via Telegram.
+    # None for chunks from other sources — backward-compatible.
+    owner_id: Optional[str] = None
+    source: Optional[str] = None
+    source_account_id: Optional[str] = None
+    conversation_id: Optional[str] = None
+    conversation_title: Optional[str] = None
+    conversation_type: Optional[str] = None
+    sender_id: Optional[str] = None
+    sender_name: Optional[str] = None
+    source_message_id: Optional[str] = None
+    content_type: Optional[str] = None
+    timestamp: Optional[str] = None   # ISO-8601 string from metadata
+    filename: Optional[str] = None
+    mime_type: Optional[str] = None
+
     def __post_init__(self) -> None:
         """Validate all field invariants immediately after construction."""
 
@@ -108,9 +134,23 @@ class RetrievedDocument:
         # distance
         if not isinstance(self.distance, (int, float)):
             raise TypeError("RetrievedDocument.distance must be a float.")
-        if self.distance < 0:
+
+        DISTANCE_EPSILON = 1e-8
+        distance_val = float(self.distance)
+
+        import math
+        if math.isnan(distance_val) or math.isinf(distance_val):
             raise ValueError(
-                f"RetrievedDocument.distance must be >= 0, got {self.distance!r}."
+                f"RetrievedDocument.distance must be finite, got {distance_val!r}."
+            )
+
+        if -DISTANCE_EPSILON <= distance_val < 0.0:
+            distance_val = 0.0
+            object.__setattr__(self, "distance", distance_val)
+
+        if distance_val < 0:
+            raise ValueError(
+                f"RetrievedDocument.distance must be >= 0, got {distance_val!r}."
             )
 
         # similarity_score

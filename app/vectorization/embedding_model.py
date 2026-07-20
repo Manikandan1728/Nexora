@@ -5,7 +5,7 @@ WHY BGE-M3 WAS CHOSEN
 ----------------------
 BAAI/bge-m3 is a state-of-the-art multilingual embedding model that:
 
-  • Handles 100+ languages — critical for WhatsApp chats that mix Arabic,
+  • Handles 100+ languages — handles multilingual conversations that mix Arabic,
     Chinese, Hindi, English, and emoji in a single message.
   • Produces 1024-dimensional dense vectors — rich enough for semantic
     retrieval, compact enough to store millions of embeddings in RAM.

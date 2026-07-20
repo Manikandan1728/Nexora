@@ -1,0 +1,14 @@
+{
+  "account_id": "tg_account_001",
+  "chat_id": "tg_chat_anu_001",
+  "sender_id": "tg_user_anu_001",
+  "sender_name": "Anu",
+  "message_id": "tg_message_1002",
+  "message_type": "link",
+  "text": "Check out this resource: https://nptel.ac.in/courses/106105208",
+  "timestamp": "2026-07-13T18:31:00+05:30",
+  "reply_to_message_id": null,
+  "forwarded_from": null,
+  "is_edited": false,
+  "is_deleted": false
+}

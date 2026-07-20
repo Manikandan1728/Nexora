@@ -38,7 +38,7 @@ class FileUtils:
         try:
             return path.read_text(encoding=encoding)
         except UnicodeDecodeError:
-            # WhatsApp exports on Windows may use latin-1
+            # Some exported chat files on Windows may use latin-1 encoding
             try:
                 return path.read_text(encoding='latin-1')
             except Exception as exc:

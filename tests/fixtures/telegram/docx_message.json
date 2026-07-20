@@ -1,0 +1,20 @@
+{
+  "account_id": "tg_account_001",
+  "chat_id": "tg_chat_arun_001",
+  "sender_id": "tg_user_arun_001",
+  "sender_name": "Arun",
+  "message_id": "tg_message_2003",
+  "message_type": "document",
+  "text": "Sharing the updated project proposal.",
+  "timestamp": "2026-07-13T15:05:00+05:30",
+  "attachment": {
+    "file_id": "tg_file_docx_001",
+    "filename": "project_proposal_v2.docx",
+    "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "file_size": 98304
+  },
+  "reply_to_message_id": null,
+  "forwarded_from": null,
+  "is_edited": false,
+  "is_deleted": false
+}

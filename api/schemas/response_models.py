@@ -41,25 +41,17 @@ class ErrorResponse(BaseModel):
 # Health
 # ---------------------------------------------------------------------------
 
+class SecretStoreHealthResponse(BaseModel):
+    """Safe secret-store health info — no key material, no plaintext."""
+    status: str = Field(..., description='"healthy", "degraded", or "unavailable".')
+    provider: str = Field(..., description="Provider name.")
+    encryption_version: str = Field(..., description="Payload version.")
+    key_id: Optional[str] = Field(default=None, description="Active key identifier.")
+    message: Optional[str] = Field(default=None, description="Optional diagnostic note.")
+
+
 class HealthResponse(BaseModel):
-    """
-    Response body for ``GET /health``.
-
-    Attributes
-    ----------
-    status : str
-        ``"ok"`` when all components are healthy, ``"degraded"`` when the
-        LLM provider is unreachable (non-fatal).
-    app_name : str
-        Application name.
-    version : str
-        API semantic version string.
-    engine_status : str
-        ``"ok"`` if all Phase 1-6 modules imported successfully.
-    llm_provider_available : bool
-        Result of a lightweight, non-blocking availability probe.
-    """
-
+    """Response body for ``GET /health``."""
     status: str = Field(..., description='"ok" or "degraded".')
     app_name: str = Field(..., description="Application name.")
     version: str = Field(..., description="API version.")
@@ -67,49 +59,9 @@ class HealthResponse(BaseModel):
     llm_provider_available: bool = Field(
         ..., description="Whether the LLM provider is reachable."
     )
-
-
-# ---------------------------------------------------------------------------
-# Upload
-# ---------------------------------------------------------------------------
-
-class PhaseStatus(BaseModel):
-    """Per-phase processing status included in UploadResponse."""
-
-    phase: str = Field(..., description="Phase identifier, e.g. 'phase1'.")
-    status: str = Field(..., description='"success" or "failed".')
-    detail: Optional[str] = Field(default=None, description="Optional detail.")
-
-
-class UploadResponse(BaseModel):
-    """
-    Response body for ``POST /upload``.
-
-    Attributes
-    ----------
-    collection_name : str
-        Generated collection name (never the raw client filename).
-    messages_parsed : int
-        Number of messages parsed by Phase 1.
-    chunks_created : int
-        Number of document chunks produced by Phase 2.
-    vectors_indexed : int
-        Number of vectors written to ChromaDB by Phase 4.
-    phase_statuses : list[PhaseStatus]
-        Per-phase success/failure summary.
-    elapsed_seconds : float
-        Total wall-clock processing time in seconds.
-    """
-
-    collection_name: str = Field(..., description="Generated collection identifier.")
-    messages_parsed: int = Field(..., description="Messages parsed by Phase 1.")
-    chunks_created: int = Field(..., description="Document chunks from Phase 2.")
-    vectors_indexed: int = Field(..., description="Vectors written to ChromaDB.")
-    phase_statuses: List[PhaseStatus] = Field(
-        default_factory=list,
-        description="Per-phase success/failure summary.",
+    secret_store: Optional[SecretStoreHealthResponse] = Field(
+        default=None, description="Secret-store health. None when not yet probed."
     )
-    elapsed_seconds: float = Field(..., description="Total processing time (seconds).")
 
 
 # ---------------------------------------------------------------------------
@@ -172,6 +124,64 @@ class RetrievedDocumentResponse(BaseModel):
     metadata: Dict[str, Any] = Field(
         default_factory=dict, description="Enriched chunk metadata."
     )
+    focused_snippet: Optional[str] = Field(
+        default=None, description="Extracted query-focused lines from the chunk."
+    )
+    matched_messages: Optional[List[Dict[str, Any]]] = Field(
+        default=None, description="Verbatim matched messages from the chunk (each has 'text' and 'index')."
+    )
+    matched_terms: Optional[List[str]] = Field(
+        default=None, description="Query terms that produced exact or partial matches."
+    )
+    relevance_reason: Optional[str] = Field(
+        default=None, description="Template-built explanation for why this chunk was matched."
+    )
+    is_low_confidence: bool = Field(
+        default=False, description="True if similarity score is below the low-confidence threshold."
+    )
+    no_strong_passage: Optional[bool] = Field(
+        default=None, description="True if no messages in this chunk matched any query term."
+    )
+    # Telegram / source-identity fields [ADDITIVE — Req 11]
+    owner_id: Optional[str] = Field(default=None, description="Owner of this chunk.")
+    source: Optional[str] = Field(default=None, description="Source platform (e.g. 'telegram').")
+    source_account_id: Optional[str] = Field(default=None)
+    conversation_id: Optional[str] = Field(default=None)
+    conversation_title: Optional[str] = Field(default=None)
+    conversation_type: Optional[str] = Field(default=None)
+    sender_id: Optional[str] = Field(default=None, description="Stable sender identifier.")
+    sender_name: Optional[str] = Field(default=None, description="Display name only.")
+    source_message_id: Optional[str] = Field(default=None)
+    content_type: Optional[str] = Field(default=None)
+    timestamp: Optional[str] = Field(default=None, description="ISO-8601 message timestamp.")
+    filename: Optional[str] = Field(default=None)
+    mime_type: Optional[str] = Field(default=None)
+
+
+class TelegramSourceResponse(BaseModel):
+    """
+    A single Telegram source citation included in the RAG query response.
+
+    All fields are optional — non-Telegram sources simply omit them.
+    Internal paths, phone numbers, and session details are NEVER included.
+
+    Requirement: 12, 14.
+    """
+
+    document_id: str = Field(..., description="Chunk vector document ID.")
+    source: str = Field(default="telegram", description="Source platform.")
+    conversation_id: str = Field(default="", description="Stable conversation identifier.")
+    conversation_title: str = Field(default="", description="Human-readable chat title.")
+    conversation_type: str = Field(default="", description="private / group / channel.")
+    sender_id: str = Field(default="", description="Stable sender identifier (not display name).")
+    sender_name: str = Field(default="", description="Display name (presentation only).")
+    message_id: str = Field(default="", description="Original Telegram message ID.")
+    timestamp: str = Field(default="", description="ISO-8601 message timestamp.")
+    content_type: str = Field(default="text", description="text / pdf / image / voice / etc.")
+    filename: str = Field(default="", description="Attachment filename when applicable.")
+    chunk_index: int = Field(default=0, description="Zero-based chunk index.")
+    snippet: str = Field(default="", description="Relevant text snippet from this chunk.")
+    score: float = Field(default=0.0, description="Similarity score [0, 1].")
 
 
 class QueryResponse(BaseModel):
@@ -189,6 +199,9 @@ class QueryResponse(BaseModel):
         Provenance records for the answer (empty when ``answer`` is ``None``).
     retrieved_documents : list[RetrievedDocumentResponse]
         All retrieved document chunks, always present.
+    sources : list[TelegramSourceResponse]
+        Telegram-native source citations (Req 12). Empty for non-Telegram or
+        when no documents were retrieved. Additive — old clients can ignore it.
     confidence : float | None
         Mean retrieval similarity across cited documents, or ``None``
         when no RAG answer was produced.
@@ -210,6 +223,10 @@ class QueryResponse(BaseModel):
     retrieved_documents: List[RetrievedDocumentResponse] = Field(
         default_factory=list, description="All retrieved document chunks."
     )
+    sources: List["TelegramSourceResponse"] = Field(
+        default_factory=list,
+        description="Telegram-native source citations (Req 12). Empty for non-Telegram sources.",
+    )
     confidence: Optional[float] = Field(
         default=None, description="Mean retrieval similarity (0-1), or null."
     )
@@ -218,6 +235,9 @@ class QueryResponse(BaseModel):
     )
     message: Optional[str] = Field(
         default=None, description="Informational note, e.g. LLM unavailability."
+    )
+    no_strong_match: bool = Field(
+        default=False, description="True if no retrieved documents meet the similarity threshold."
     )
     elapsed_seconds: float = Field(..., description="Total query time (seconds).")
 

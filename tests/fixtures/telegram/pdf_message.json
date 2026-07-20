@@ -1,0 +1,20 @@
+{
+  "account_id": "tg_account_001",
+  "chat_id": "tg_chat_anu_001",
+  "sender_id": "tg_user_anu_001",
+  "sender_name": "Anu",
+  "message_id": "tg_message_1003",
+  "message_type": "document",
+  "text": "Please review the attached assignment guidelines.",
+  "timestamp": "2026-07-13T18:32:00+05:30",
+  "attachment": {
+    "file_id": "tg_file_pdf_001",
+    "filename": "assignment_guidelines.pdf",
+    "mime_type": "application/pdf",
+    "file_size": 204800
+  },
+  "reply_to_message_id": null,
+  "forwarded_from": null,
+  "is_edited": false,
+  "is_deleted": false
+}

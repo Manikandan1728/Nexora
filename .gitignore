@@ -94,3 +94,17 @@ Thumbs.db
 .coverage
 htmlcov/
 coverage.xml
+
+# ===============================
+# Frontend
+# ===============================
+frontend/dist/
+node_modules/
+
+# ===============================
+# Telegram sessions
+# ===============================
+*.session
+*.session-journal
+
+*.zip

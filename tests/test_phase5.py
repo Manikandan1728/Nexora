@@ -215,7 +215,7 @@ class TestRetrievalConfig:
     def test_default_config(self):
         config = RetrievalConfig()
         assert config.top_k == 5
-        assert config.score_threshold == 0.0
+        assert config.score_threshold == 0.40
         assert config.distance_metric == "cosine"
         assert config.include_metadata is True
         assert config.include_documents is True

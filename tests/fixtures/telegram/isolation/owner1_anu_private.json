@@ -1,0 +1,13 @@
+{
+  "_owner": "owner_001",
+  "_chat": "private_anu_owner1",
+  "_fact": "Anu told owner_001 that the NEXORA deadline is next Friday.",
+  "account_id": "tg_account_owner1",
+  "chat_id": "tg_private_anu_owner1",
+  "sender_id": "tg_user_anu_owner1",
+  "sender_name": "Anu",
+  "message_id": "iso_msg_001",
+  "message_type": "text",
+  "text": "The NEXORA project deadline is next Friday at 5 PM.",
+  "timestamp": "2026-07-14T10:00:00+05:30"
+}

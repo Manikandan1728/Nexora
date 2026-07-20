@@ -1,0 +1,13 @@
+{
+  "_owner": "owner_001",
+  "_chat": "private_arun_owner1",
+  "_fact": "Arun told owner_001 that the database migration runs on Sunday.",
+  "account_id": "tg_account_owner1",
+  "chat_id": "tg_private_arun_owner1",
+  "sender_id": "tg_user_arun_owner1",
+  "sender_name": "Arun",
+  "message_id": "iso_msg_003",
+  "message_type": "text",
+  "text": "The database migration is scheduled for Sunday at midnight.",
+  "timestamp": "2026-07-14T12:00:00+05:30"
+}

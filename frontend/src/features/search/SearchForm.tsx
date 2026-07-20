@@ -67,7 +67,7 @@ export function SearchForm({
             )}
           >
             {collections.length === 0 ? (
-              <option value="">No collections yet — upload one first</option>
+              <option value="">No collections yet — connect Telegram first</option>
             ) : (
               collections.map((c) => (
                 <option key={c.name} value={c.name}>

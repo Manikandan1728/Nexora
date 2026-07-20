@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutGrid, List, Upload } from "lucide-react";
+import { LayoutGrid, List, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCollections } from "@/hooks/useCollections";
 import { useDeleteCollection } from "@/hooks/useDeleteCollection";
@@ -88,11 +88,11 @@ export default function CollectionsPage() {
               </div>
 
               <Link
-                to="/upload"
+                to="/telegram"
                 className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-xs font-semibold text-accent-foreground hover:opacity-90 transition-opacity"
               >
-                <Upload className="h-3.5 w-3.5" aria-hidden="true" />
-                Upload New
+                <MessageSquare className="h-3.5 w-3.5" aria-hidden="true" />
+                Connect Telegram
               </Link>
             </div>
           }
@@ -102,13 +102,13 @@ export default function CollectionsPage() {
           <EmptyState
             icon={<Database className="h-6 w-6" />}
             title="No collections yet"
-            description="Upload a WhatsApp chat ZIP to create your first knowledge base."
+            description="Connect Telegram and enable indexing to create your first knowledge base."
             action={
               <Link
-                to="/upload"
+                to="/telegram"
                 className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground hover:opacity-90 transition-opacity"
               >
-                Upload your first collection
+                Connect Telegram
               </Link>
             }
           />

@@ -1,0 +1,15 @@
+{
+  "_comment": "Timestamp is BEFORE indexing_enabled_at (2026-07-13T18:00:00+05:30). Must be ignored by ingestion policy.",
+  "account_id": "tg_account_001",
+  "chat_id": "tg_chat_anu_001",
+  "sender_id": "tg_user_anu_001",
+  "sender_name": "Anu",
+  "message_id": "tg_message_0999",
+  "message_type": "text",
+  "text": "This message was sent before indexing was enabled and must not be indexed.",
+  "timestamp": "2026-07-13T17:59:00+05:30",
+  "reply_to_message_id": null,
+  "forwarded_from": null,
+  "is_edited": false,
+  "is_deleted": false
+}

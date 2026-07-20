@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------
+  # Reverse Proxy (Entrypoint)
+  # ---------------------------------------------------------
+  proxy:
+    image: nginx:alpine
+    container_name: nexora-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/proxy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_healthy
+    networks:
+      - nexora_net
+    restart: unless-stopped
+
+  # ---------------------------------------------------------
+  # Frontend Service (React / Vite built app)
+  # ---------------------------------------------------------
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: nexora-frontend
+    networks:
+      - nexora_net
+    restart: unless-stopped
+    # Healthcheck is defined in frontend.Dockerfile
+
+  # ---------------------------------------------------------
+  # Backend Service (FastAPI + Telegram Worker)
+  # ---------------------------------------------------------
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: nexora-backend
+    env_file:
+      - .env
+    environment:
+      # Use Postgres configuration matching the db service
+      NEXORA_DATABASE_URL: postgresql://${POSTGRES_USER:-nexora}:${POSTGRES_PASSWORD:-nexora_secret_password}@postgres:5432/${POSTGRES_DB:-nexora}
+    volumes:
+      # Persist vector storage and media (if used)
+      - nexora_app_data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+    networks:
+      - nexora_net
+    restart: unless-stopped
+    # Healthcheck is defined in backend.Dockerfile
+
+  # ---------------------------------------------------------
+  # PostgreSQL Database
+  # ---------------------------------------------------------
+  postgres:
+    image: postgres:15-alpine
+    container_name: nexora-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nexora}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nexora_secret_password}
+      POSTGRES_DB: ${POSTGRES_DB:-nexora}
+    volumes:
+      - nexora_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nexora} -d ${POSTGRES_DB:-nexora}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexora_net
+    restart: unless-stopped
+
+  # ---------------------------------------------------------
+  # ChromaDB (Vector Database)
+  # ---------------------------------------------------------
+  chromadb:
+    image: chromadb/chroma:0.4.24
+    container_name: nexora-chromadb
+    volumes:
+      - nexora_chroma_data:/chroma/chroma
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - nexora_net
+    restart: unless-stopped
+
+volumes:
+  nexora_postgres_data:
+    name: nexora_postgres_data
+  nexora_chroma_data:
+    name: nexora_chroma_data
+  nexora_app_data:
+    name: nexora_app_data
+
+networks:
+  nexora_net:
+    name: nexora_net
+    driver: bridge

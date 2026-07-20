@@ -89,3 +89,58 @@ class CollectionDeleteError(NexoraAPIError):
 
     http_status = 500
     default_message = "Failed to delete the collection."
+
+
+# ---------------------------------------------------------------------------
+# Telegram / Metadata-retrieval exceptions (Requirements 18)
+# ---------------------------------------------------------------------------
+
+class UnauthorizedOwnerScopeError(NexoraAPIError):
+    """
+    Client-supplied owner scope does not match authenticated owner.
+    Maps to HTTP 403. No internal detail returned.
+    """
+    http_status = 403
+    default_message = "Unauthorized owner scope."
+
+
+class ConversationNotFoundError(NexoraAPIError):
+    """Requested conversation does not exist. Maps to HTTP 404."""
+    http_status = 404
+    default_message = "Conversation not found."
+
+
+class ConversationNotOwnedError(NexoraAPIError):
+    """Requested conversation is not owned by the authenticated user. Maps to HTTP 403."""
+    http_status = 403
+    default_message = "Conversation is not owned by the authenticated user."
+
+
+class InvalidSenderFilterError(NexoraAPIError):
+    """sender_id is invalid for the selected conversation. Maps to HTTP 400."""
+    http_status = 400
+    default_message = "Invalid sender filter for the selected conversation."
+
+
+class UnsupportedFilterCombinationError(NexoraAPIError):
+    """Filter combination is logically contradictory or unsupported. Maps to HTTP 400."""
+    http_status = 400
+    default_message = "Unsupported filter combination."
+
+
+class InvalidTimestampFilterError(NexoraAPIError):
+    """Timestamp filter value is malformed. Maps to HTTP 400."""
+    http_status = 400
+    default_message = "Invalid timestamp filter value."
+
+
+class VectorFilterBuildError(NexoraAPIError):
+    """ChromaDB where-clause construction failed. Maps to HTTP 500 (generic to client)."""
+    http_status = 500
+    default_message = "An error occurred while building the search filter."
+
+
+class MissingMandatoryMetadataError(NexoraAPIError):
+    """Required metadata field missing at ingestion time. Maps to HTTP 500."""
+    http_status = 500
+    default_message = "Missing mandatory metadata during ingestion."

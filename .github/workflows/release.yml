@@ -1,0 +1,48 @@
+name: Release Orchestration
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on semantic version tags (e.g., v1.0.0)
+
+jobs:
+  release:
+    name: Generate Release Artifacts & Draft
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Build Frontend Bundle
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Archive Frontend Artifacts
+        run: |
+          cd frontend/dist
+          zip -r ../../nexora-frontend-bundle.zip .
+
+      - name: Archive Backend Source
+        run: |
+          zip -r nexora-backend.zip api/ app/ core/ data/ embeddings/ exceptions/ ingestion/ llm/ models/ parser/ retrieval/ scripts/ utils/ vectordb/ requirements.txt docker-compose.yml docker-compose.prod.yml docker/ .env.example
+
+      - name: Release to GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            nexora-frontend-bundle.zip
+            nexora-backend.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

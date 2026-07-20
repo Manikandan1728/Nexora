@@ -1,0 +1,14 @@
+{
+  "account_id": "tg_account_001",
+  "chat_id": "tg_chat_arun_001",
+  "sender_id": "tg_user_arun_001",
+  "sender_name": "Arun",
+  "message_id": "tg_message_2006",
+  "message_type": "text",
+  "text": "I will present the algorithm section on Tuesday.",
+  "timestamp": "2026-07-13T16:00:00+05:30",
+  "reply_to_message_id": null,
+  "forwarded_from": null,
+  "is_edited": false,
+  "is_deleted": false
+}

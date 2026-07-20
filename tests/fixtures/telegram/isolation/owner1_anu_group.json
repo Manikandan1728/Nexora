@@ -1,0 +1,13 @@
+{
+  "_owner": "owner_001",
+  "_chat": "group_project_owner1",
+  "_fact": "Anu said in the group that the API review is on Monday.",
+  "account_id": "tg_account_owner1",
+  "chat_id": "tg_group_project_owner1",
+  "sender_id": "tg_user_anu_owner1",
+  "sender_name": "Anu",
+  "message_id": "iso_msg_002",
+  "message_type": "text",
+  "text": "Team, the API review meeting is scheduled for Monday morning.",
+  "timestamp": "2026-07-14T11:00:00+05:30"
+}

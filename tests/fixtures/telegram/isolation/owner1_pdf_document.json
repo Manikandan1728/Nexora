@@ -1,0 +1,19 @@
+{
+  "_owner": "owner_001",
+  "_chat": "private_anu_owner1",
+  "_fact": "PDF attachment sent by Anu to owner_001 about the NEXORA specification.",
+  "account_id": "tg_account_owner1",
+  "chat_id": "tg_private_anu_owner1",
+  "sender_id": "tg_user_anu_owner1",
+  "sender_name": "Anu",
+  "message_id": "iso_msg_006",
+  "message_type": "document",
+  "text": "Here is the NEXORA technical specification document.",
+  "timestamp": "2026-07-14T10:30:00+05:30",
+  "attachment": {
+    "file_id": "iso_file_pdf_001",
+    "filename": "nexora_spec_v2.pdf",
+    "mime_type": "application/pdf",
+    "file_size": 204800
+  }
+}

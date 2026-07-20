@@ -1,0 +1,14 @@
+{
+  "account_id": "tg_account_001",
+  "chat_id": "tg_chat_anu_001",
+  "sender_id": "tg_user_owner_001",
+  "sender_name": "Me",
+  "message_id": "tg_message_1005",
+  "message_type": "text",
+  "text": "Yes, I will have it ready by Sunday evening.",
+  "timestamp": "2026-07-13T18:40:00+05:30",
+  "reply_to_message_id": "tg_message_1001",
+  "forwarded_from": null,
+  "is_edited": false,
+  "is_deleted": false
+}
